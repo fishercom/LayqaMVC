@@ -1,0 +1,40 @@
+﻿@model Layqa.Web.Areas.Admin.Models.ArticleFormViewModel
+@using Layqa.Service.Util
+@{
+    var image = XMLReader.GetValue(Model.XmlParams, "image");
+    var align = XMLReader.GetValue(Model.XmlParams, "align");
+
+    List<SelectListItem> lItems = new List<SelectListItem>();
+    var optLeft = new SelectListItem() { Text = "Izquierda", Value = "" };
+    var optRight = new SelectListItem() { Text = "Derecha", Value = "right" };
+    optRight.Selected = align == "right";
+    
+    lItems.Add(optLeft);
+    lItems.Add(optRight);
+}
+<div class="form-group">
+    @Html.LabelFor(model => model.SubTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.SubTitle, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.SubTitle, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.Label("Imagen", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBox("XmlParams_image", image, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.Label("Alineación", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownList("XmlParams_align", lItems, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.Resumen, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextAreaFor(model => model.Resumen)
+        @Html.ValidationMessageFor(model => model.Resumen, "", new { @class = "text-danger" })
+    </div>
+</div>

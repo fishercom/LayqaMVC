@@ -1,0 +1,75 @@
+﻿@model Layqa.Web.Models.ContactFormViewModel
+@using (Ajax.BeginForm("ContactForm", "Home",
+    new AjaxOptions
+    {
+        HttpMethod = "post",
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "form_contact",
+        OnBegin = "return before()",
+        //OnSuccess = "success()",
+        //OnFailure = "failure()"
+        OnComplete = "complete()"
+    }
+    ))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" name="Name" id="Name" class="form-control" placeholder="Tu Nombre *" required />
+            </div>
+            <div class="form-group">
+                <input type="email" name="Email" id="email" class="form-control" placeholder="Tu Email *" required />
+            </div>
+            <div class="form-group">
+                <input type="tel" name="Phone" id="phone" class="form-control" placeholder="Tu Teléfono *" required />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <textarea name="Message" id="message" placeholder="Tu Mensaje *" class="form-control" required></textarea>
+                @ViewData.ModelState.Count
+                @ViewData.ModelState.IsValid
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 text-center">
+            @if (ViewData.ModelState.Count > 0 && ViewData.ModelState.IsValid)
+            {
+                <div id="success" style="display:none">
+                    <div class='alert alert-success'>
+                        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                        <strong>Tu mensaje ha sido enviado correctamente. </strong>
+                    </div>
+                </div>
+            }
+            <div id="error" style="display:none">
+                <div class='alert alert-danger'>
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                    <strong>Ha ocurrido un error en la aplicación.</strong>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.ValidationMessage("Error", new { @class = "text-danger" })
+                </div>
+            </div>
+            <input type="submit" class="btn btn-xl" value="Enviar Mensaje" />
+            <input type="reset" class="hidden" />
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function before() {
+        $("input[type=submit]").val("Enviando...");
+        return true;
+    }
+    function complete() {
+        if ($('#success').length > 0){
+            $('#success').show();
+            $('#contactForm').closest('form').find("input[type=text], textarea").val("");
+        }
+        else
+            $('#error').show();
+
+        $("input[type=submit]").val("Enviar Mensaje");
+    }
+</script>

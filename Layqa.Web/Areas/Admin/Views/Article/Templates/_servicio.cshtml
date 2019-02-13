@@ -1,0 +1,18 @@
+﻿@model Layqa.Web.Areas.Admin.Models.ArticleFormViewModel
+@using Layqa.Service.Util
+@{
+    var css = XMLReader.GetValue(Model.XmlParams, "css");
+}
+<div class="form-group">
+    @Html.Label("Estilo", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBox("XmlParams_css", css, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.Resumen, labelText: "Resumen", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextAreaFor(model => model.Resumen)
+        @Html.ValidationMessageFor(model => model.Resumen, "", new { @class = "text-danger" })
+    </div>
+</div>

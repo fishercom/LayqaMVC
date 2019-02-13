@@ -1,0 +1,26 @@
+﻿@model Layqa.Web.Areas.Admin.Models.ArticleFormViewModel
+@using Layqa.Service.Util
+@{
+    var url = XMLReader.GetValue(Model.XmlParams, "url");
+    var target = XMLReader.GetValue(Model.XmlParams, "target");
+
+    List<SelectListItem> lItems = new List<SelectListItem>();
+    var optInternal = new SelectListItem() { Text = "Interno", Value = "" };
+    var optExternal = new SelectListItem() { Text = "Externo", Value = "_blank" };
+    optExternal.Selected = optExternal.Value.Equals(target);
+
+    lItems.Add(optInternal);
+    lItems.Add(optExternal);
+}
+<div class="form-group">
+    @Html.Label("URL", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBox("XmlParams_url", url, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.Label("Destino", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownList("XmlParams_target", lItems, new { @class = "form-control" })
+    </div>
+</div>

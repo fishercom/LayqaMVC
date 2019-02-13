@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Layqa.Web.Areas.Admin.Models.SchemaListViewModel>
+@using Layqa.Service
+@using Layqa.Service.Dto
+@{
+    ServiceTemplate serviceTemplate = new ServiceTemplate();
+    ServiceSchema serviceSchema = new ServiceSchema();
+
+    SchemaDto SchemaParent = ViewBag.SchemaParentId != null ? serviceSchema.GetItem(ViewBag.SchemaParentId) : null;
+    
+    if (SchemaParent != null) {
+        ViewBag.Title = "Esquema " + ViewBag.SchemaParentId + " (" + SchemaParent.Template.Name + ")";
+    }
+    else
+    {
+        ViewBag.Title = "Esquemas";
+    }
+}
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-lg-12">
+
+        <h2>
+            @if (SchemaParent != null)
+            {
+                @ViewBag.Title <a href="@Url.Action("Edit", new { Id = ViewBag.SchemaParentId })" class="btn btn-warning btn-sm"><i class="fa fa-fw fa-edit"></i> Editar</a>
+            }
+            else
+            {
+                @ViewBag.Title
+            }
+        </h2>
+
+        <p>
+            <a href="@Url.Action("Create", new { SchemaParentId = ViewBag.SchemaParentId })" class="btn btn-success">Crear Esquema</a>
+        </p>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationMessage("Error", new { @class = "text-danger" })
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TemplateName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Iterations)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsPage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Active)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.TemplateName, "Index", new { SchemaParentId = item.SchemaId })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Iterations)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsPage)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", new { Id = item.SchemaId })" class="btn btn-warning btn-sm"><i class="fa fa-fw fa-edit"></i> Editar</a>
+                        <a href="@Url.Action("Delete", new { Id = item.SchemaId })" class="btn btn-danger btn-sm" data-ajax="true" data-ajax-method="Get" data-ajax-mode="replace" data-ajax-update="#DeleteForm" data-target="#DeleteForm" data-toggle="modal"><i class="fa fa-fw fa-trash"></i> Eliminar</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        @if (SchemaParent != null)
+        {
+            <a href="@Url.Action("Index", new { SchemaParentId = SchemaParent.SchemaParentId })" class="btn btn-default btn-sm"><i class="fa fa-fw fa-backward"></i> Regresar</a>
+        }
+
+        <div id="DeleteForm"
+             class="modal fade"
+             tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+        </div>
+
+    </div>
+</div>
+<!-- /.row -->
+
+@section Scripts{
+    @Scripts.Render("~/bundles/unobtrusiveajax")
+}

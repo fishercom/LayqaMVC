@@ -1,0 +1,109 @@
+﻿@model Layqa.Web.Areas.Admin.Models.SchemaFormViewModel
+@using Layqa.Service
+@using Layqa.Service.Dto
+@{
+    var TemplateList = ViewBag.TemplateList;
+
+    ViewBag.Title = "Editar Esquema " + Model.SchemaId;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <h2>@ViewBag.Title</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.SchemaId)
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationMessage("Error", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TemplateId, labelText: "Plantilla", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.TemplateId, new SelectList(ViewBag.TemplateList, "TemplateId", "Name"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TemplateId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Iterations, labelText: "Repetir", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Iterations, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Iterations, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Position, labelText: "Posición", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Alias, labelText: "Alias", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Alias, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Alias, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                @Html.EditorFor(model => model.IsPage)
+                                @Html.ValidationMessageFor(model => model.IsPage)
+                                Es Página
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                @Html.EditorFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active)
+                                Activo
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Guardar" class="btn btn-danger" />
+                        @Html.ActionLink("Cancelar", "Index", new { SchemaId = ViewBag.SchemaId, SchemaParentId = ViewBag.SchemaParentId }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+<!-- /.row -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@section Custom {
+    <script>
+        $(document).ready(function () {
+            CKEDITOR.replace('Resumen',
+            {
+                toolbar: 'Basic',
+                height: "100"
+            });
+        });
+    </script>
+}

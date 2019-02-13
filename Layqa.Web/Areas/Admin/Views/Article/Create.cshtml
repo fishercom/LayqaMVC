@@ -1,0 +1,83 @@
+﻿@model Layqa.Web.Areas.Admin.Models.ArticleFormViewModel
+@using Layqa.Service
+@using Layqa.Service.Dto
+@{
+    ServiceTemplate serviceTemplate = new ServiceTemplate();
+    TemplateDto Template = serviceTemplate.GetItem_Schema(ViewBag.SchemaId);
+
+    ViewBag.Title = "Nuevo: " + Template.Name;
+}
+<div class="row">
+    <div class="col-lg-12">
+
+        <h2>@ViewBag.Title</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ArticleParentId" value="@ViewBag.ArticleParentId" />
+            <input type="hidden" name="SchemaId" value="@ViewBag.SchemaId" />
+
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationMessage("Error", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, labelText: "Título", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @try
+                {
+                     @Html.Partial("Templates/_" + Template.AdminView)
+                }
+                catch
+                {
+                    <div class="col-md-offset-2 col-md-10 text-danger">No se puede cargar la plantilla "@Template.AdminView"</div>
+                }
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                @Html.EditorFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active)
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Guardar" class="btn btn-danger" />
+                        @Html.ActionLink("Cancelar", "Index", new { SchemaId = ViewBag.SchemaId, ArticleParentId = ViewBag.ArticleParentId }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+<!-- /.row -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@section Custom {
+    <script>
+        $(document).ready(function () {
+            CKEDITOR.replace('Resumen',
+            {
+                toolbar: 'Basic',
+                height: "100"
+            });
+        });
+    </script>
+}

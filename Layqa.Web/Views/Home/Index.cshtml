@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Agency.cshtml";
+    ViewBag.Title = "Zafiro CMS";
+}
+@using Layqa.Service
+@using Layqa.Service.Dto
+@{
+    ServiceTemplate serviceTemplate = new ServiceTemplate();
+    ServiceSchema serviceSchema = new ServiceSchema();
+    ServiceArticle serviceArticle = new ServiceArticle();
+
+    var SectionList = serviceArticle.GetWebList(null);
+}
+@{
+    foreach (var section in SectionList)
+    {
+        var service = serviceTemplate.GetItem(serviceSchema.GetItem(section.SchemaId).TemplateId);
+        var Template = service.FrontView;
+        try
+        {
+            @Html.Partial("Templates/_" + Template, section)
+        }
+        catch
+        {
+            <div class="text-danger">No se puede cargar la plantilla "@Template"</div>
+        }
+    }
+}

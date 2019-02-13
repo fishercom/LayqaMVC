@@ -1,0 +1,18 @@
+﻿@model Layqa.Web.Areas.Admin.Models.ArticleFormViewModel
+@using Layqa.Service.Util
+@{
+    var image = XMLReader.GetValue(Model.XmlParams, "image");
+}
+<div class="form-group">
+    @Html.LabelFor(model => model.SubTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.SubTitle, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.SubTitle, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.Label("Imagen", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBox("XmlParams_image", image, new { @class = "form-control" })
+    </div>
+</div>

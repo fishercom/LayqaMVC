@@ -1,0 +1,93 @@
+﻿@using Layqa.Service
+@using Layqa.Service.Util
+@using Layqa.Service.Dto
+@model ArticleDto
+@{
+    ServiceArticle serviceArticle = new ServiceArticle();
+    ServiceTemplate serviceTemplate = new ServiceTemplate();
+    ServiceSchema serviceSchema = new ServiceSchema();
+
+    var lSection = serviceArticle.GetWebList(Model.ArticleId);
+    var lEquipo = new List<ArticleDto>();
+    var lCliente = new List<ArticleDto>();
+    var Resumen = string.Empty;
+
+    foreach (var container in lSection)
+    {
+        List<ArticleDto> lTemp = serviceArticle.GetWebList(container.ArticleId).ToList();
+        if (lTemp.Count() > 0)
+        {
+            var Template = serviceTemplate.GetItem(serviceSchema.GetItem(lTemp.FirstOrDefault().SchemaId).TemplateId);
+            switch (Template.FrontView)
+            {
+                case "equipo":
+                    lEquipo = lTemp;
+                    Resumen = container.Resumen;
+                    break;
+                case "cliente":
+                    lCliente = lTemp;
+                    break;
+            }
+        }
+    }
+    
+}
+<!-- Team Section -->
+<section id="team" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">@Model.Title</h2>
+                <h3 class="section-subheading text-muted">@Model.SubTitle</h3>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var equipo in lEquipo)
+            {
+                var image = XMLReader.GetValue(equipo.XmlParams, "image");
+                var twitter = XMLReader.GetValue(equipo.XmlParams, "twitter");
+                var facebook = XMLReader.GetValue(equipo.XmlParams, "facebook");
+                var linkedin = XMLReader.GetValue(equipo.XmlParams, "linkedin");
+                <div class="col-sm-4">
+                    <div class="team-member">
+                        <img src="@image" class="img-responsive img-circle" alt="">
+                        <h4>@equipo.Title</h4>
+                        <p class="text-muted">@equipo.Resumen</p>
+                        <ul class="list-inline social-buttons">
+                            <li>
+                                <a href="@twitter"><i class="fa fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="@facebook"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="@linkedin"><i class="fa fa-linkedin"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <p class="large text-muted">@Html.Raw(Resumen)</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Clients Aside -->
+<aside class="clients">
+    <div class="container">
+        <div class="row">
+            @foreach (var cliente in lCliente)
+            {
+                var image = XMLReader.GetValue(cliente.XmlParams, "image");
+            <div class="col-md-3 col-sm-6">
+                <a href="#">
+                    <img src="@image" class="img-responsive img-centered" alt="">
+                </a>
+            </div>
+            }
+        </div>
+    </div>
+</aside>

@@ -1,0 +1,27 @@
+﻿@using Layqa.Service
+@using Layqa.Service.Util
+@using Layqa.Service.Dto
+@model ArticleDto
+@{
+    ServiceArticle serviceArticle = new ServiceArticle();
+    var lSection = serviceArticle.GetWebList(Model.ArticleId);
+}
+<!-- Header -->
+<header>
+    <div class="container">
+    @foreach (var container in lSection)
+    {
+        var lAnimacion = serviceArticle.GetWebList(container.ArticleId);
+        foreach (var intro in lAnimacion)
+        {
+            var url = XMLReader.GetValue(intro.XmlParams, "url");
+            var tag = XMLReader.GetValue(intro.XmlParams, "tag");
+            <div class="intro-text">
+                <div class="intro-lead-in">@intro.Title</div>
+                <div class="intro-heading">@intro.SubTitle</div>
+                <a href="@url" class="page-scroll btn btn-xl">@tag</a>
+            </div>
+        }
+    }
+    </div>
+</header>

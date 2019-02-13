@@ -1,0 +1,40 @@
+﻿@using Layqa.Service
+@using Layqa.Service.Dto
+@{
+    ServiceAdmMenu serviceMenu = new ServiceAdmMenu();
+    IEnumerable<AdmMenuDto> menu = serviceMenu.GetList();
+
+    var plist = menu.Where(m => m.MenuParentId == null).ToList(); // This will list main menu items on which we'll apply loop to display them.
+        
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+            @foreach (var pitem in plist)
+            {
+                var ctlr = pitem.Controller != null ? pitem.Controller : "";
+                var clist = menu.Where(m => m.MenuParentId == pitem.MenuId).ToList();
+                var url = ctlr!="" ? Url.Action("Index", ctlr) : "javascript:;";
+                var active = url == Request.Url.AbsolutePath || (clist.Count() > 0 && clist.Select(x => x.Controller).Contains(ViewContext.RouteData.Values["controller"]));
+                <li class="@(active ? "active" : "")">
+                    @if (clist != null && clist.Count() > 0)
+                    {
+                        <a href="@url" data-toggle="collapse" data-target="#@pitem.MenuId"><i class="fa fa-fw fa-@pitem.IconCss"></i> @pitem.Name </a>
+                            <ul id="@pitem.MenuId" class="@(!active ? "collapse" : "")">
+                                @foreach (var citem in clist)
+                                {
+                                    url = !string.IsNullOrEmpty(citem.Params) ? Url.Action("Index", citem.Controller) + "?" + citem.Params : Url.Action("Index", citem.Controller);
+                                    active = url == Request.Url.AbsolutePath || (citem.Controller==ViewContext.RouteData.Values["controller"]);
+                                    <li class="@(active ? "active" : "")">
+                                        <a href="@url">@citem.Name</a>
+                                    </li>
+                                }
+                            </ul>
+                    }
+                    else
+                    {
+                        <a href="@url"><i class="fa fa-fw fa-@pitem.IconCss"></i> @pitem.Name</a>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}

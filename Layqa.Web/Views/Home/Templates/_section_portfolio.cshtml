@@ -1,0 +1,42 @@
+﻿@using Layqa.Service
+@using Layqa.Service.Util
+@using Layqa.Service.Dto
+@model ArticleDto
+@{
+    ServiceArticle serviceArticle = new ServiceArticle();
+    var lSection = serviceArticle.GetWebList(Model.ArticleId);
+    var counter = 0;
+}
+<!-- Portfolio Grid Section -->
+<section id="portfolio" class="bg-light-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">@Model.Title</h2>
+                <h3 class="section-subheading text-muted">@Model.SubTitle</h3>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var servicio in lSection)
+            {
+                counter++;
+                var image = XMLReader.GetValue(servicio.XmlParams, "image");
+                var hashtag = "portfolioModal" + counter;
+                <div class="col-md-4 col-sm-6 portfolio-item">
+                    <a href="#@hashtag" class="portfolio-link" data-toggle="modal">
+                        <div class="portfolio-hover">
+                            <div class="portfolio-hover-content">
+                                <i class="fa fa-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="@image" class="img-responsive" alt="">
+                    </a>
+                    <div class="portfolio-caption">
+                        <h4>@servicio.Title</h4>
+                        <p class="text-muted">@servicio.SubTitle</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
